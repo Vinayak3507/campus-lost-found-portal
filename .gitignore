@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Environment variables
+.env
+.venv
+backend/.env
+
+# Python virtual environments
+env/
+venv/
+backend/env/
+backend/venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Node
+node_modules/
