@@ -19,7 +19,7 @@ def get_user_by_email(college_email: str):
 
     except Error as e:
         print(f"Database Error: {e}")
-        raise DatabaseError
+        raise Exception(str(e))
 
     finally:
         cursor.close()
@@ -79,17 +79,13 @@ def create_user(user_data: dict):
                 college_email,
                 password_hash,
                 branch,
-                session,
+                academic_session,
                 block,
                 phone,
                 role,
                 reputation_score,
                 is_verified
-            )
-            VALUES(
-                %s,%s,%s,%s,%s,
-                %s,%s,%s,%s,%s,%s,%s
-            )
+            )VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """
         values = (
             user_data["id"],
@@ -110,7 +106,7 @@ def create_user(user_data: dict):
 
     except Error:
         connection.rollback()
-        raise DatabaseError
+        raise Exception(str(e))
 
     finally:
 

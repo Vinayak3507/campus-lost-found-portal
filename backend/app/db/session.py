@@ -106,23 +106,14 @@ def create_tables():
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS reports (
             id CHAR(36) PRIMARY KEY,
-
             user_id CHAR(36) NOT NULL,
-
             report_type ENUM('LOST','FOUND') NOT NULL,
-
             category_id CHAR(36),
-
             title VARCHAR(150) NOT NULL,
-
             description TEXT,
-
             location VARCHAR(255),
-
             date_time DATETIME,
-
             image_url VARCHAR(255),
-
             status ENUM(
                 'ACTIVE',
                 'MATCHED',
@@ -159,15 +150,10 @@ def create_tables():
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS claims (
             id CHAR(36) PRIMARY KEY,
-
             report_id CHAR(36) NOT NULL,
-
             claimer_id CHAR(36) NOT NULL,
-
             proof_description TEXT,
-
             proof_image VARCHAR(255),
-
             status ENUM(
                 'PENDING',
                 'APPROVED',
@@ -191,17 +177,11 @@ def create_tables():
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS notifications (
             id CHAR(36) PRIMARY KEY,
-
             user_id CHAR(36) NOT NULL,
-
             title VARCHAR(255),
-
             message TEXT,
-
             is_read BOOLEAN DEFAULT FALSE,
-
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
             FOREIGN KEY (user_id)
                 REFERENCES users(id)
                 ON DELETE CASCADE

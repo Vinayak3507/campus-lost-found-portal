@@ -97,3 +97,7 @@ class UserRegisterRequest(BaseModel):
         if password != value:
             raise ValueError("Passwords do not match.")
         return value
+
+class UserRegisterResponse(BaseModel):
+    message: str
+    user_id: str
