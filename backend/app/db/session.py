@@ -78,24 +78,17 @@ def create_tables():
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id CHAR(36) PRIMARY KEY,
-
             student_name VARCHAR(100) NOT NULL,
             student_id VARCHAR(30) UNIQUE NOT NULL,
             college_email VARCHAR(100) UNIQUE NOT NULL,
-
             password_hash VARCHAR(255) NOT NULL,
-
             branch VARCHAR(50),
-            session VARCHAR(20),
+            academic_session VARCHAR(20),
             block VARCHAR(20),
             phone VARCHAR(20),
-
             role ENUM('STUDENT','ADMIN') DEFAULT 'STUDENT',
-
             reputation_score INT DEFAULT 0,
-
             is_verified BOOLEAN DEFAULT FALSE,
-
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 ON UPDATE CURRENT_TIMESTAMP
