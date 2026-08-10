@@ -1,7 +1,6 @@
 from mysql.connector import Error
 from app.db.session import get_connection
 
-#fetching user details
 
 def get_user_by_email(college_email: str):
 
@@ -40,6 +39,10 @@ def get_user_by_student_id(student_id: str):
         cursor.execute(query, (student_id,))
         return cursor.fetchone()
 
+    except Error as e:
+        print(f"Database Error: {e}")
+        raise Exception(str(e))
+
     finally:
         cursor.close()
         connection.close()
@@ -58,6 +61,10 @@ def get_user_by_id(user_id: str):
         """
         cursor.execute(query, (user_id,))
         return cursor.fetchone()
+
+    except Error as e:
+        print(f"Database Error: {e}")
+        raise Exception(str(e))
 
     finally:
         cursor.close()
@@ -109,6 +116,5 @@ def create_user(user_data: dict):
         raise Exception(str(e))
 
     finally:
-
         cursor.close()
         connection.close()

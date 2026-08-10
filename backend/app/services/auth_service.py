@@ -11,13 +11,12 @@ token generation
 ---> This is where actual auth behavior lives."""
 
 import uuid
-from app.core.security import hash_password
+from app.core.security import (hash_password,verify_password,create_access_token,)
 from app.repositories.auth_repository import (create_user,get_user_by_email,get_user_by_student_id,)
-from app.schema.auth_schema import (UserRegisterRequest,UserRegisterResponse,)
+from app.schema.auth_schema import (UserRegisterRequest,UserRegisterResponse,UserLoginRequest,UserLoginResponse,)
 
 
 class AuthService:
-
     @staticmethod
     def register_user(user: UserRegisterRequest) -> UserRegisterResponse:
 
@@ -28,7 +27,6 @@ class AuthService:
 
         # Check if student ID already exists
         existing_student = get_user_by_student_id(user.student_id)
-
         if existing_student:
             raise ValueError("Student ID is already registered.")
 
@@ -59,3 +57,19 @@ class AuthService:
             message="User registered successfully.",
             user_id=user_id,
         )
+
+    @staticmethod
+    def login_user(user: UserLoginRequest) -> UserLoginResponse:
+        existing_user = get_user_by_email(user.college_email)
+
+        if not existing_user:
+            raise ValueError("Invalid email or password.")
+
+        password_valid = verify_password(user.password,existing_user["password_hash"])
+
+        if not password_valid:
+            raise ValueError("Invalid email or password.")
+
+        access_token = create_access_token({"sub": existing_user["id"]})
+
+        return UserLoginResponse(message="Login successful.",access_token=access_token,token_type="bearer")

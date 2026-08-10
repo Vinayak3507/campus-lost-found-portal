@@ -1,30 +1,24 @@
-""""Purpose:
+"""
+Purpose:
 Define data validation models.
 
-**Responsibilities:
-Validate incoming data for:
-user registration
-user login
+Responsibilities:
+- Validate incoming data for user registration
+- Validate incoming data for user login
+- Define response formats for authentication and user data
 
-*Also define response format for:
-token response
-user response
+Schemas protect the backend from invalid or unsafe input.
+"""
 
----> Schemas protect your backend from bad input data."""
-
-
-# from typing import Optional
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from datetime import datetime
+from pydantic import (BaseModel,ConfigDict,EmailStr,Field,field_validator,)
 from app.models.enums import BranchEnum
-from pydantic import ConfigDict
-
 
 
 class UserRegisterRequest(BaseModel):
-    
-    model_config = ConfigDict(
-        str_strip_whitespace=True
-    )
+
+    model_config = ConfigDict(str_strip_whitespace=True)
+
     student_name: str = Field(
         ...,
         min_length=3,
@@ -44,7 +38,10 @@ class UserRegisterRequest(BaseModel):
     password: str = Field(
         ...,
         min_length=8,
-        description="Password must contain uppercase, lowercase, digit and special character"
+        description=(
+            "Password must contain uppercase, lowercase, "
+            "digit and special character"
+        )
     )
 
     confirm_password: str
@@ -57,7 +54,7 @@ class UserRegisterRequest(BaseModel):
         description="Example: 2024-2028"
     )
 
-    block : str | None = None
+    block: str | None = None
 
     phone: str | None = Field(
         default=None,
@@ -67,7 +64,6 @@ class UserRegisterRequest(BaseModel):
     @field_validator("student_name")
     @classmethod
     def validate_student_name(cls, value: str):
-        value = value.strip()
         if not value:
             raise ValueError("Student name cannot be empty.")
         return value
@@ -75,6 +71,7 @@ class UserRegisterRequest(BaseModel):
     @field_validator("password")
     @classmethod
     def validate_password(cls, value: str):
+
         if not any(c.isupper() for c in value):
             raise ValueError("Password must contain at least one uppercase letter.")
 
@@ -85,7 +82,6 @@ class UserRegisterRequest(BaseModel):
             raise ValueError("Password must contain at least one digit.")
 
         special_characters = "!@#$%^&*()-_=+[]{}|\\:;\"'<>,.?/"
-
         if not any(c in special_characters for c in value):
             raise ValueError("Password must contain at least one special character.")
         return value
@@ -101,3 +97,31 @@ class UserRegisterRequest(BaseModel):
 class UserRegisterResponse(BaseModel):
     message: str
     user_id: str
+
+class UserLoginRequest(BaseModel):
+    college_email: EmailStr
+    password: str = Field(
+        ...,
+        min_length=1,
+        description="Account password"
+    )
+
+class UserLoginResponse(BaseModel):
+    message: str
+    access_token: str
+    token_type: str
+
+class UserResponse(BaseModel):
+    id: str
+    student_name: str
+    student_id: str
+    college_email: EmailStr
+    branch: BranchEnum
+    academic_session: str
+    block: str | None = None
+    phone: str | None = None
+    role: str
+    reputation_score: int
+    is_verified: bool
+    created_at: datetime
+    updated_at: datetime
