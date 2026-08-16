@@ -11,15 +11,19 @@ Start server
 
 
 from fastapi import FastAPI
+from app.api.reports import router as reports_router
+from app.api.auth import router as auth_router
 from app.db.session import initialize_database
 
-app = FastAPI()
+app = FastAPI(title="Campus Lost & Found API")
 
 
 @app.on_event("startup")
 def startup():
     initialize_database()
 
+app.include_router(auth_router)
+app.include_router(reports_router)
 
 @app.get("/")
 def home():

@@ -78,24 +78,17 @@ def create_tables():
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id CHAR(36) PRIMARY KEY,
-
             student_name VARCHAR(100) NOT NULL,
             student_id VARCHAR(30) UNIQUE NOT NULL,
             college_email VARCHAR(100) UNIQUE NOT NULL,
-
             password_hash VARCHAR(255) NOT NULL,
-
             branch VARCHAR(50),
-            session VARCHAR(20),
+            academic_session VARCHAR(20),
             block VARCHAR(20),
             phone VARCHAR(20),
-
             role ENUM('STUDENT','ADMIN') DEFAULT 'STUDENT',
-
             reputation_score INT DEFAULT 0,
-
             is_verified BOOLEAN DEFAULT FALSE,
-
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 ON UPDATE CURRENT_TIMESTAMP
@@ -113,23 +106,14 @@ def create_tables():
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS reports (
             id CHAR(36) PRIMARY KEY,
-
             user_id CHAR(36) NOT NULL,
-
             report_type ENUM('LOST','FOUND') NOT NULL,
-
             category_id CHAR(36),
-
             title VARCHAR(150) NOT NULL,
-
             description TEXT,
-
             location VARCHAR(255),
-
             date_time DATETIME,
-
             image_url VARCHAR(255),
-
             status ENUM(
                 'ACTIVE',
                 'MATCHED',
@@ -166,15 +150,10 @@ def create_tables():
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS claims (
             id CHAR(36) PRIMARY KEY,
-
             report_id CHAR(36) NOT NULL,
-
             claimer_id CHAR(36) NOT NULL,
-
             proof_description TEXT,
-
             proof_image VARCHAR(255),
-
             status ENUM(
                 'PENDING',
                 'APPROVED',
@@ -198,17 +177,11 @@ def create_tables():
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS notifications (
             id CHAR(36) PRIMARY KEY,
-
             user_id CHAR(36) NOT NULL,
-
             title VARCHAR(255),
-
             message TEXT,
-
             is_read BOOLEAN DEFAULT FALSE,
-
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
             FOREIGN KEY (user_id)
                 REFERENCES users(id)
                 ON DELETE CASCADE

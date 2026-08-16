@@ -1,10 +1,9 @@
-fastapi==0.141.1
+fastapi[standard]==0.141.1
 uvicorn==0.52.1
 pydantic==2.13.4
-fastapi[standard]
 mysql-connector-python
 python-dotenv
-
-python-jose[cryptography]
+bcrypt==4.0.1
 passlib[bcrypt]
+python-jose[cryptography]
 python-multipart
