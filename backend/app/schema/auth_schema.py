@@ -125,3 +125,18 @@ class UserResponse(BaseModel):
     is_verified: bool
     created_at: datetime
     updated_at: datetime
+
+class UserUpdateRequest(BaseModel):
+    student_name: str | None = Field(
+        default=None,
+        min_length=3,
+        max_length=100,
+    )
+    branch: BranchEnum | None = None
+    academic_session: str | None = Field(
+        default=None,
+        pattern=r"^\d{4}-\d{4}$",
+        description="Example: 2024-2028"
+    )
+    block: str | None = Field(default=None,max_length=1,)
+    phone: str | None = Field(default=None,pattern=r"^\d{10}$")

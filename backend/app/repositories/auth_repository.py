@@ -1,18 +1,13 @@
 from mysql.connector import Error
 from app.db.session import get_connection
 
-
 def get_user_by_email(college_email: str):
 
     connection = get_connection()
     cursor = connection.cursor(dictionary=True)
 
     try:
-        query = """
-            SELECT *
-            FROM users
-            WHERE college_email = %s
-        """
+        query = """SELECT * FROM users WHERE college_email = %s"""
         cursor.execute(query, (college_email,))
         return cursor.fetchone()
 
@@ -31,11 +26,7 @@ def get_user_by_student_id(student_id: str):
     cursor = connection.cursor(dictionary=True)
 
     try:
-        query = """
-            SELECT *
-            FROM users
-            WHERE student_id = %s
-        """
+        query = """SELECT * FROM users WHERE student_id = %s"""
         cursor.execute(query, (student_id,))
         return cursor.fetchone()
 
@@ -54,11 +45,7 @@ def get_user_by_id(user_id: str):
     cursor = connection.cursor(dictionary=True)
 
     try:
-        query = """
-            SELECT *
-            FROM users
-            WHERE id = %s
-        """
+        query = """SELECT * FROM users WHERE id = %s"""
         cursor.execute(query, (user_id,))
         return cursor.fetchone()
 
@@ -69,8 +56,6 @@ def get_user_by_id(user_id: str):
     finally:
         cursor.close()
         connection.close()
-
-#Inserting user details
 
 def create_user(user_data: dict):
 
@@ -111,10 +96,38 @@ def create_user(user_data: dict):
         cursor.execute(query, values)
         connection.commit()
 
-    except Error:
+    except Error as e:
         connection.rollback()
         raise Exception(str(e))
 
     finally:
         cursor.close()
         connection.close()
+
+def update_user(user_id: str, user_data: dict):
+
+    connection = None
+    cursor = None
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        fields = []
+        values = []
+        for field, value in user_data.items():
+            fields.append(f"{field} = %s")
+            values.append(value)
+        if not fields:
+            return False
+
+        values.append(user_id)
+        query = f"""UPDATE users SET {", ".join(fields)} WHERE id = %s"""
+        cursor.execute(query, values)
+        connection.commit()
+        return cursor.rowcount > 0
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if connection:
+            connection.close()
